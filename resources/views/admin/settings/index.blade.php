@@ -119,7 +119,7 @@ function submitOpodSend() {
     });
     const form = document.getElementById('opodSendForm');
     const csrf = form.querySelector('input[name=_token]').value;
-    fetch('/api/opod-send', {
+    fetch("{{ url('/api/opod-send') }}", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
         body: JSON.stringify({ start_date: start, end_date: end })
