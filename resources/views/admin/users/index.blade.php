@@ -108,7 +108,7 @@
 <script>
     function openEditModal(user) {
         const form = document.getElementById('editUserForm');
-        form.action = `/admin/users/${user.id}`;
+        form.action = `{{ url('/admin/users') }}/${user.id}`;
         form.elements['name'].value = user.name;
         form.elements['email'].value = user.email;
         form.elements['password'].value = '';

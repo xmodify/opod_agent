@@ -156,9 +156,13 @@
             form.elements['ward'].value = data.ward;
             form.elements['ward_name'].value = data.ward_name || '';
             form.elements['bed_qty'].value = data.bed_qty || 0;
+            const cols = ['ward_normal', 'ward_m', 'ward_f', 'ward_vip', 'ward_lr', 'ward_homeward'];
+            cols.forEach(c => {
+                if(form.elements[c]) form.elements[c].checked = data[c] === 'Y';
+            });
         }
 
-        form.action = `/admin/lookups/${type}/${id}`;
+        form.action = `{{ url('/admin/lookups') }}/${type}/${id}`;
         toggleModal('editRecordModal');
     }
 </script>
@@ -323,6 +327,15 @@
                     <label style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">Bed Quantity</label>
                     <input type="number" name="bed_qty" value="0" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.75rem;">
                 </div>
+                @foreach(['ward_normal' => 'Normal', 'ward_m' => 'ชาย', 'ward_f' => 'หญิง', 'ward_vip' => 'VIP', 'ward_lr' => 'LR', 'ward_homeward' => 'Homeward'] as $col => $label)
+                <div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                    <label style="font-size: 0.875rem;">{{ $label }}</label>
+                    <label class="switch">
+                        <input type="checkbox" name="{{ $col }}" value="Y">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                @endforeach
             @endif
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
                 <i class="fas fa-save"></i> Save Record
@@ -403,6 +416,15 @@
                     <label style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">Bed Quantity</label>
                     <input type="number" name="bed_qty" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.75rem;">
                 </div>
+                @foreach(['ward_normal' => 'Normal', 'ward_m' => 'ชาย', 'ward_f' => 'หญิง', 'ward_vip' => 'VIP', 'ward_lr' => 'LR', 'ward_homeward' => 'Homeward'] as $col => $label)
+                <div style="margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                    <label style="font-size: 0.875rem;">{{ $label }}</label>
+                    <label class="switch">
+                        <input type="checkbox" name="{{ $col }}" value="Y">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                @endforeach
             @endif
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; background: #f59e0b;">
                 <i class="fas fa-save"></i> Update Record
