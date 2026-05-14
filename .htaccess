@@ -4,7 +4,6 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteBase /opod_agent/
 
     # Block access to hidden files and directories (starting with a dot), including .env
     RewriteRule ^\. - [F,L]
