@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /opod_agent/
 
     # Block access to hidden files and directories (starting with a dot), including .env
     RewriteRule ^\. - [F,L]
@@ -22,10 +23,12 @@
 
     # If the request is for a file/folder that exists in the public directory, serve it
     RewriteCond %{REQUEST_URI} !^/public/
-    RewriteCond %{DOCUMENT_ROOT}/opod_agent/public/$1 -f [OR]
-    RewriteCond %{DOCUMENT_ROOT}/opod_agent/public/$1 -d
+    RewriteCond public/$1 -f [OR]
+    RewriteCond public/$1 -d
     RewriteRule ^(.*)$ public/$1 [L]
 
     # Otherwise, send the request to the root index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L]
 </IfModule>
