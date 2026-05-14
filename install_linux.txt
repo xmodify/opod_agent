@@ -60,3 +60,10 @@ OPOD Agent - Linux (RHEL/CentOS/AlmaLinux) Installation Guide
 11. SELinux (Optional - if enabled)
     sudo chcon -Rt httpd_sys_rw_content_t /var/www/html/opod_agent/storage
     sudo chcon -Rt httpd_sys_rw_content_t /var/www/html/opod_agent/bootstrap/cache
+
+
+<Directory "/var/www/html/opod_agent">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
