@@ -90,5 +90,33 @@ class SettingController extends Controller
         return back()->with('success', 'Setting updated successfully.');
     }
 
+    public function gitPull()
+    {
+        $output = [];
 
+        // Change working directory to project root
+        $projectRoot = base_path();
+        chdir($projectRoot);
+
+        // 1. git reset --hard
+        $output[] = "--- git reset --hard ---";
+        exec('git reset --hard 2>&1', $output);
+
+        // 2. git pull origin main
+        $output[] = "\n--- git pull origin main ---";
+        exec('git pull origin main 2>&1', $output);
+
+        // 3. php artisan optimize:clear
+        $output[] = "\n--- php artisan optimize:clear ---";
+        try {
+            \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            $output[] = \Illuminate\Support\Facades\Artisan::output();
+        } catch (\Throwable $e) {
+            $output[] = "Artisan Error: " . $e->getMessage();
+        }
+
+        $message = implode("\n", $output);
+
+        return back()->with('success', "Git pull completed successfully!\n\n" . $message);
+    }
 }

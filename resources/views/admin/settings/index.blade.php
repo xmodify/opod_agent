@@ -16,6 +16,12 @@
                 <i class="fas fa-database"></i> Upgrade Structure
             </button>
         </form>
+        <form action="{{ route('settings.gitpull') }}" method="POST" onsubmit="return confirm('คุณต้องการ Reset Code และดึงข้อมูลเวอร์ชันล่าสุดจาก Git ใช่หรือไม่?');">
+            @csrf
+            <button type="submit" class="btn btn-danger" style="background: #ef4444 !important; color: white !important; border-color: #ef4444 !important;">
+                <i class="fas fa-sync-alt"></i> Git Pull
+            </button>
+        </form>
     </div>
 </div>
 

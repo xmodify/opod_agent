@@ -242,7 +242,7 @@
         </div>
 
         @if(session('success'))
-            <div style="background: #ecfdf5; color: #059669; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #d1fae5;">
+            <div style="background: #ecfdf5; color: #059669; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #d1fae5; white-space: pre-line;">
                 {{ session('success') }}
             </div>
         @endif

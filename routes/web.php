@@ -21,6 +21,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     
     // Settings CRUD
     Route::post('settings/upgrade', [\App\Http\Controllers\Admin\SettingController::class, 'upgradeStructure'])->name('settings.upgrade');
+    Route::post('settings/gitpull', [\App\Http\Controllers\Admin\SettingController::class, 'gitPull'])->name('settings.gitpull');
     Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class)->only(['index', 'update']);
     
     // Lookups CRUD
