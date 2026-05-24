@@ -157,7 +157,17 @@ function submitOpodSend() {
         <tbody>
             @foreach($settings as $setting)
             <tr>
-                <td><strong>{{ $setting->name }}</strong></td>
+                <td>
+                    @php
+                        $friendlyName = match($setting->name) {
+                            'opoh_token' => 'API Token (รหัสส่งข้อมูล)',
+                            'opoh_url'   => 'API Base URL (ลิงก์ส่งข้อมูลเซิร์ฟเวอร์กลาง)',
+                            'bed_report' => 'จำนวนเตียงรายงาน (bed_report)',
+                            default      => $setting->name
+                        };
+                    @endphp
+                    <strong>{{ $friendlyName }}</strong>
+                </td>
                 <td>
                     <form id="form-{{ $setting->id }}" action="{{ route('settings.update', $setting->id) }}" method="POST">
                         @csrf

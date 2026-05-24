@@ -60,6 +60,11 @@ class SettingController extends Controller
             });
         }
 
+        // Rename bed_qty to bed_report in main_setting table
+        DB::table('main_setting')
+            ->where('name', 'bed_qty')
+            ->update(['name' => 'bed_report']);
+
         return back()->with('success', 'Database structure upgraded successfully.');
     }
 

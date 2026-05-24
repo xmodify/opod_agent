@@ -15,10 +15,10 @@ class OpodSendController extends Controller
         set_time_limit(0);
 
         // 1) โหลดค่าพื้นฐาน-------------------------------------------------------------------------
-        $token    = DB::table('main_setting')->where('name', 'opoh_token')->value('value');
-        $baseUrl  = DB::table('main_setting')->where('name', 'opoh_url')->value('value');
-        $hospcode = DB::connection('hosxp')->table('opdconfig')->value('hospitalcode');
-        $bed_qty  = DB::table('main_setting')->where('name', 'bed_qty')->value('value');
+        $token      = DB::table('main_setting')->where('name', 'opoh_token')->value('value');
+        $baseUrl    = DB::table('main_setting')->where('name', 'opoh_url')->value('value');
+        $hospcode   = DB::connection('hosxp')->table('opdconfig')->value('hospitalcode');
+        $bed_report = DB::table('main_setting')->where('name', 'bed_report')->value('value');
 
         if (!$token || !$hospcode || !$baseUrl) {
             return response()->json([
@@ -269,7 +269,7 @@ class OpodSendController extends Controller
             GROUP BY a.an, a.dchdate, a.admdate, i.adjrw, a.income, a.inc03, inc12 ) AS a
 			GROUP BY dchdate';
 
-        $rowsIpd = DB::connection('hosxp')->select($sqlIpd, [$hospcode, $bed_qty, $start, $end]);
+        $rowsIpd = DB::connection('hosxp')->select($sqlIpd, [$hospcode, $bed_report, $start, $end]);
 
         $ipdRecords = array_map(function ($r) {
             return [
@@ -287,26 +287,12 @@ class OpodSendController extends Controller
         }, $rowsIpd);
 
         // 3.3 ข้อมูล UPdate Hospital ปัจจุบัน-------------------------------------------------------------------------------------------------------
-        $sqlhospital = '
-            SELECT ? AS hospcode,IFNULL((SELECT SUM(bed_qty) FROM opod_agent.lookup_ward 
-            WHERE (ward_normal = "Y" OR ward_m ="Y" OR ward_f ="Y" OR ward_vip="Y")),0) AS bed_qty,
-            IFNULL(COUNT(DISTINCT bedno),0) AS bed_use
-            FROM (SELECT i.an,i.regdate,i.regtime,i.ward,b.bedno,b.export_code
-            FROM ipt i 
-			INNER JOIN iptadm ia ON ia.an = i.an
-            LEFT JOIN bedno b ON b.bedno=ia.bedno
-			WHERE i.confirm_discharge = "N" 
-			AND b.export_code IS NOT NULL AND b.export_code <>"") AS a ';
-
-        $rowshospital = DB::connection('hosxp')->select($sqlhospital, [$hospcode]);
-
-        $hospitalRecords = array_map(function ($r) use ($hospcode, $bed_qty) {
-            return [
-                'hospcode' => $hospcode,
-                'bed_qty'  => (int)($r->bed_qty ?? $bed_qty ?? 0),
-                'bed_use'  => (int)($r->bed_use ?? 0),
-            ];
-        }, $rowshospital);
+        $hospitalRecords = [
+            [
+                'hospcode'   => $hospcode,
+                'bed_report' => (int)($bed_report ?: 0),
+            ]
+        ];
 
         // 3.4 ข้อมูล IPD_bed-----------------------------------------------------------------------------------------------------------
         $sqlIpd_bed = '
